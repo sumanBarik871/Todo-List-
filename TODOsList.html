@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TudoList </title>
+    <style>
+        .container{
+            width:600px ;
+            height:100% ;
+            margin: auto;
+        }
+        .container h1{
+            margin-left: 40%;
+        }
+        .ab-1{
+            width: 99%;
+            height:15px ;
+
+        }
+        .ab-2{
+            width: 99%;
+            height:30px ;
+
+        }
+        .btn{
+            background-color: blue;
+            color: white;
+            border: 2px solid black;
+            border-radius: 5px;
+        }
+        .tm{
+            text-align: center;
+        }
+        .con{
+            border: 2px solid black;
+            padding: 10px;
+        }
+        .ab{
+            width: 99%;
+        }
+        
+
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="con">
+            <h1>TODOs List</h1>
+            <div>
+                <label>Title <br/></label>
+                <input type="text" id="title" class="ab-1"><br/>
+                <small>Add an item to the list</small>
+            </div>
+            <div>
+                <label>Description</label>
+                <br/>
+                <textarea class="ab-2"  id="description"></textarea>
+            </div>
+            <br/>
+            <button class="btn" id="Add">Add to list </button>
+        </div>
+        <h1>Your Items</h1>
+        <table class="ab">
+            <thead>
+                <tr>
+                    <th>SNo</th>
+                    <th>Item Title</th>
+                    <th>Item Description</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <tr class="tm">
+                    <th>1</th>
+                    <td>Get some coffee</td>
+                    <td>You need coffee as you are a coder</td>
+                    <td><button class="btn" id="btn-2">Delete </button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+</body>
+<script>
+    function getAndUpdate(){
+        var tit=document.getElementById("title").value;
+  var des=document.getElementById('description').value;
+   if(localStorage.getItem('itemJshon')==null){
+    itemJshonArray = [];
+    itemJshonArray.push([tit,des]);
+    localStorage.setItem('itemJshon',JSON.stringify(itemJshonArray))
+   }
+   else{
+    itemJshonArrayStr=localStorage.getItem('itemJshon')
+    itemJshonArray=JSON.parse(itemJshonArrayStr);
+    itemJshonArray.push([tit,des]);
+    localStorage.setItem('itemJshon',JSON.stringify(itemJshonArray))
+   }
+   update();
+    }
+function update(){
+ 
+   if(localStorage.getItem('itemJshon')==null){
+    itemJshonArray = [];
+    localStorage.setItem('itemJshon',JSON.stringify(itemJshonArray))
+   }
+   else{
+    itemJshonArrayStr=localStorage.getItem('itemJshon')
+    itemJshonArray=JSON.parse(itemJshonArrayStr);
+   }
+   let tableBody = document.getElementById("tableBody");
+   let str="";
+   itemJshonArray.forEach((element,index) => {
+     str +=`
+        <tr class="tm">
+        <th>${index+1}</th>
+        <td>${element[0]}</td>
+        <td>${element[1]}</td>
+        <td><button class="btn" id="btn-2" onclick="deleted()">Delete </button></td>
+        </tr> `;
+   });
+   tableBody.innerHTML=str;
+}
+Add = document.getElementById("Add");
+Add.addEventListener("click",getAndUpdate);
+update();
+
+function deleted(itemIndex){
+      console.log("Delete",itemIndex);
+    itemJshonArrayStr=localStorage.getItem('itemJshon')
+    itemJshonArray=JSON.parse(itemJshonArrayStr);
+
+    itemJshonArray.splice(itemIndex,1);
+    localStorage.setItem('itemJshon',JSON.stringify(itemJshonArray))
+    update();
+}
+</script>
+</html>
